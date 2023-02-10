@@ -1,0 +1,20 @@
+spring:
+  config:
+    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888/}
+  application:
+    name: fast-food-app
+  profiles:
+    active: dev
+
+  datasource:
+    url: jdbc:mysql://nest-api.cluster-c1rtbhbfjwdb.us-east-1.rds.amazonaws.com/nest?useSSL=false
+    username: root
+    password: Madara*20
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+server:
+  port: 8080
+
+

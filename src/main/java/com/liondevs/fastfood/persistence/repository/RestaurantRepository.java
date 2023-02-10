@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface RestaurantRepository extends CrudRepository<Restaurant, Integer> {
 
+
    public   List<Restaurant> findAllByCreatedAt(Instant createdAt); // hay muchos queries de busqueda
     //queries nativos, con JPA y Hibernate
     @Modifying //indic que es una query de modification

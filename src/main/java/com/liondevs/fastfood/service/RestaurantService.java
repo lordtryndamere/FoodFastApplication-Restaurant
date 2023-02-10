@@ -1,5 +1,6 @@
 package com.liondevs.fastfood.service;
 
+import com.liondevs.fastfood.context.ConfigProperties;
 import com.liondevs.fastfood.controller.dtos.CreateRestaurantDTO;
 import com.liondevs.fastfood.controller.dtos.UpdateRestaurantDTO;
 import com.liondevs.fastfood.exceptions.DefaultException;
@@ -18,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+
 @Service
 public class RestaurantService {
      //inyeccion por anotacion @AutoWired
@@ -25,21 +28,29 @@ public class RestaurantService {
   private final CreateRestaurantInDTOToRestaurant mapper;
   private final UpdateRestaurantInDTOtoRestaurant updateMapper;
 
-   public  RestaurantService(RestaurantRepository restaurantRepository, CreateRestaurantInDTOToRestaurant mapper, UpdateRestaurantInDTOtoRestaurant updateMapper){
+  private final ConfigProperties configProperties;
+
+   public  RestaurantService(RestaurantRepository restaurantRepository, CreateRestaurantInDTOToRestaurant mapper, UpdateRestaurantInDTOtoRestaurant updateMapper, ConfigProperties configProperties){
 
        this.restaurantRepository = restaurantRepository; //inyeccion por constructor, mejor para testear
        this.mapper = mapper;
        this.updateMapper = updateMapper;
+
+
+       this.configProperties = configProperties;
    }
     //con esto leo valores del application properties
 //    @Value("#{${name}.name}")
-//    private String name;
+//    public String name;
 //
 //    @Value("#{${name}.description}")
-//    private String description;
+//    public String description;
 
 
     public ResponseEntity<Map<String,Restaurant>> save(CreateRestaurantDTO restaurant){
+        System.out.println(configProperties.getNames().get("name")); //llamando propiedades del archivo de configuracion
+        System.out.println(configProperties.getNames().get("description"));
+
     try {
         final Restaurant record =  mapper.map(restaurant);
         restaurantRepository.save(record);

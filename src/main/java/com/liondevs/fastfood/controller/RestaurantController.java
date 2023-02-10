@@ -5,9 +5,9 @@ import com.liondevs.fastfood.controller.dtos.CreateRestaurantDTO;
 import com.liondevs.fastfood.controller.dtos.UpdateRestaurantDTO;
 import com.liondevs.fastfood.persistence.entity.Restaurant;
 import com.liondevs.fastfood.service.RestaurantService;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +15,7 @@ import java.util.Map;
 
 
 @RestController
+@RefreshScope // nos permite actualizar la config sin reiniciar, se debe usar en donde se necesite cambie una propiedad o valor
 @RequestMapping("/restaurant")
 public class RestaurantController {
     private final RestaurantService restaurantService;
