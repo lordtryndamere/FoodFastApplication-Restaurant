@@ -1,3 +1,8 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+---
 spring:
   config:
     import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888/}
@@ -16,6 +21,64 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5Dialect
 server:
   port: 8080
+#info:
+#  app:
+#    name: fast-food-app-a
+#    instance: 1
 
+#external-service: http://fast-food-b/actuator/info
 
+#---
+#spring:
+#  config:
+#    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888/}
+#    activate:
+#      on-profile: client-a
+#  application:
+#    name: fast-food-app-a
+#
+#  datasource:
+#    url: jdbc:mysql://nest-api.cluster-c1rtbhbfjwdb.us-east-1.rds.amazonaws.com/nest?useSSL=false
+#    username: root
+#    password: Madara*20
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    database-platform: org.hibernate.dialect.MySQL5Dialect
+#server:
+#  port: ${port:8080}
+#
+#info:
+#  app:
+#    name: fast-food-app-a
+#    instance: ${instance:1}
+#
+#external-service: http://localhost:8081/actuator/info
+#
+#---
+#spring:
+#  config:
+#    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888/}
+#    activate:
+#      on-profile: client-b
+#  application:
+#    name: fast-food-app-b
+#
+#
+#  datasource:
+#    url: jdbc:mysql://nest-api.cluster-c1rtbhbfjwdb.us-east-1.rds.amazonaws.com/nest?useSSL=false
+#    username: root
+#    password: Madara*20
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    database-platform: org.hibernate.dialect.MySQL5Dialect
+#server:
+#  port: ${port:8081}
+#
+#info:
+#  app:
+#    name: fast-food-app-b
+#    instance: ${instance:1}
+#external-service: http://localhost:8080/actuator/info
 

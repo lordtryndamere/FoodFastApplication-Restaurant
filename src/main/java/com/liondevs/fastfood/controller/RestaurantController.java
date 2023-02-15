@@ -7,9 +7,13 @@ import com.liondevs.fastfood.persistence.entity.Restaurant;
 import com.liondevs.fastfood.service.RestaurantService;
 import jakarta.validation.Valid;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.Map;
 
@@ -17,12 +21,25 @@ import java.util.Map;
 @RestController
 @RefreshScope // nos permite actualizar la config sin reiniciar, se debe usar en donde se necesite cambie una propiedad o valor
 @RequestMapping("/restaurant")
+@Slf4j
 public class RestaurantController {
-    private final RestaurantService restaurantService;
 
-    public RestaurantController(RestaurantService restaurantService) {
+    //private final String externalService;
+   // private final RestTemplate restTemplate;
+    private final RestaurantService restaurantService;
+    //de esta forma usamos restTemplate
+    public RestaurantController(RestaurantService restaurantService ) {
+     //   this.externalService = externalService;
+    //    this.restTemplate = restTemplate;
         this.restaurantService = restaurantService;
     }
+
+//        @GetMapping(value = "/externalService", produces = MediaType.APPLICATION_JSON_VALUE)
+//        public ResponseEntity<String> handleRequest(){
+//            final ResponseEntity<String> response = restTemplate.getForEntity(externalService,String.class);
+//            System.out.println(response.getBody());
+//         return response;
+//        }
 
     @PostMapping("/")
     public ResponseEntity<Map<String, Restaurant>> save(@Valid @RequestBody CreateRestaurantDTO restaurant) {
