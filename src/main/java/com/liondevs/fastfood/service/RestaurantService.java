@@ -51,10 +51,13 @@ public class RestaurantService {
         List<FindAllRestaurantsByUserCoordinatesResponse> response = new ArrayList<>(restaurants.stream().map((restaurant -> {
             FindAllRestaurantsByUserCoordinatesResponse rest = new FindAllRestaurantsByUserCoordinatesResponse();
             double distance = Utils
-                    .getDistanceInKilometers(Double.parseDouble(coordinates.getLongitude())
-                            , Double.parseDouble(coordinates.getLatitude())
-                            , Double.parseDouble(restaurant.getLongitude())
-                            , Double.parseDouble(restaurant.getLatitude()));
+                    .getDistanceInKilometers(
+                            Double.parseDouble(
+                            coordinates.getLongitude()),
+                            Double.parseDouble(coordinates.getLatitude()),
+                            Double.parseDouble(restaurant.getLongitude()),
+                            Double.parseDouble(restaurant.getLatitude())
+                    );
             rest.setDistance(distance);
             rest.setName(restaurant.getName());
             rest.setDescription(rest.getDescription());
