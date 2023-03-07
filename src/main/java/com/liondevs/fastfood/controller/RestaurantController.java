@@ -57,7 +57,7 @@ public class RestaurantController {
     @PostMapping("/find-by-coordinates")
     List<FindAllRestaurantsByUserCoordinatesResponse> findAllRestaurantsByUserCoordinates(
             @Valid @RequestBody FindAllRestaurantsByUserCoordinatesRequest request){
-        return restaurantService.findAllResturantsByUserCoordinates(request);
+        return restaurantService.findAllRestaurantsByUserCoordinates(request);
     }
 
     @DeleteMapping("/{id}")

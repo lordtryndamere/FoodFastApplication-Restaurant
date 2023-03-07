@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -47,7 +46,7 @@ public class RestaurantService {
        this.configProperties = configProperties;
    }
 
-    public List<FindAllRestaurantsByUserCoordinatesResponse> findAllResturantsByUserCoordinates(FindAllRestaurantsByUserCoordinatesRequest coordinates){
+    public List<FindAllRestaurantsByUserCoordinatesResponse> findAllRestaurantsByUserCoordinates(FindAllRestaurantsByUserCoordinatesRequest coordinates){
         List<Restaurant> restaurants = (List<Restaurant>) restaurantRepository.findAll();
         List<FindAllRestaurantsByUserCoordinatesResponse> response = new ArrayList<>(restaurants.stream().map((restaurant -> {
             FindAllRestaurantsByUserCoordinatesResponse rest = new FindAllRestaurantsByUserCoordinatesResponse();
