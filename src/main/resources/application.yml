@@ -7,7 +7,7 @@ spring:
   config:
     import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888/}
   application:
-    name: fast-food-app
+    name: fast-food-app-restaurant
   profiles:
     active: dev
 

@@ -18,4 +18,5 @@ public interface RestaurantRepository extends CrudRepository<Restaurant, Integer
     @Query(value = "UPDATE restaurant SET latitude=:latitude WHERE ID=:id", nativeQuery = true)
    public  void updateLatitude(@Param("latitude") String latitude,@Param("id") Integer id);
 
+
 }

@@ -1,6 +1,6 @@
 package com.liondevs.fastfood.exceptions;
 
-import com.liondevs.fastfood.exceptions.DefaultException;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

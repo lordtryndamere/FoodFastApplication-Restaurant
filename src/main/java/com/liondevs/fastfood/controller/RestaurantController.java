@@ -3,6 +3,8 @@ package com.liondevs.fastfood.controller;
 import com.liondevs.fastfood.controller.dtos.CreateRestaurantDTO;
 
 import com.liondevs.fastfood.controller.dtos.UpdateRestaurantDTO;
+import com.liondevs.fastfood.controller.dtos.queries.FindAllRestaurantsByUserCoordinatesRequest;
+import com.liondevs.fastfood.controller.dtos.queries.FindAllRestaurantsByUserCoordinatesResponse;
 import com.liondevs.fastfood.persistence.entity.Restaurant;
 import com.liondevs.fastfood.service.RestaurantService;
 import jakarta.validation.Valid;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -24,22 +27,13 @@ import java.util.Map;
 @Slf4j
 public class RestaurantController {
 
-    //private final String externalService;
-   // private final RestTemplate restTemplate;
     private final RestaurantService restaurantService;
-    //de esta forma usamos restTemplate
+
     public RestaurantController(RestaurantService restaurantService ) {
-     //   this.externalService = externalService;
-    //    this.restTemplate = restTemplate;
+
         this.restaurantService = restaurantService;
     }
 
-//        @GetMapping(value = "/externalService", produces = MediaType.APPLICATION_JSON_VALUE)
-//        public ResponseEntity<String> handleRequest(){
-//            final ResponseEntity<String> response = restTemplate.getForEntity(externalService,String.class);
-//            System.out.println(response.getBody());
-//         return response;
-//        }
 
     @PostMapping("/")
     public ResponseEntity<Map<String, Restaurant>> save(@Valid @RequestBody CreateRestaurantDTO restaurant) {
@@ -58,6 +52,12 @@ public class RestaurantController {
     @GetMapping("/")
     ResponseEntity<?> all(){
         return restaurantService.all();
+    }
+
+    @PostMapping("/find-by-coordinates")
+    List<FindAllRestaurantsByUserCoordinatesResponse> findAllRestaurantsByUserCoordinates(
+            @Valid @RequestBody FindAllRestaurantsByUserCoordinatesRequest request){
+        return restaurantService.findAllResturantsByUserCoordinates(request);
     }
 
     @DeleteMapping("/{id}")

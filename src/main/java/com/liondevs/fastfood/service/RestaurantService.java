@@ -3,6 +3,8 @@ package com.liondevs.fastfood.service;
 import com.liondevs.fastfood.context.ConfigProperties;
 import com.liondevs.fastfood.controller.dtos.CreateRestaurantDTO;
 import com.liondevs.fastfood.controller.dtos.UpdateRestaurantDTO;
+import com.liondevs.fastfood.controller.dtos.queries.FindAllRestaurantsByUserCoordinatesRequest;
+import com.liondevs.fastfood.controller.dtos.queries.FindAllRestaurantsByUserCoordinatesResponse;
 import com.liondevs.fastfood.exceptions.DefaultException;
 import com.liondevs.fastfood.exceptions.RestaurantNotFoundException;
 import com.liondevs.fastfood.mapper.CreateRestaurantInDTOToRestaurant;
@@ -10,15 +12,14 @@ import com.liondevs.fastfood.mapper.UpdateRestaurantInDTOtoRestaurant;
 import com.liondevs.fastfood.persistence.entity.Restaurant;
 import com.liondevs.fastfood.persistence.repository.RestaurantRepository;
 
+import com.liondevs.fastfood.utils.Utils;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -28,24 +29,42 @@ public class RestaurantService {
   private final CreateRestaurantInDTOToRestaurant mapper;
   private final UpdateRestaurantInDTOtoRestaurant updateMapper;
 
+
   private final ConfigProperties configProperties;
 
-   public  RestaurantService(RestaurantRepository restaurantRepository, CreateRestaurantInDTOToRestaurant mapper, UpdateRestaurantInDTOtoRestaurant updateMapper, ConfigProperties configProperties){
+   public  RestaurantService(RestaurantRepository restaurantRepository,
+                             CreateRestaurantInDTOToRestaurant mapper,
+                             UpdateRestaurantInDTOtoRestaurant updateMapper,
+                             ConfigProperties configProperties
+                          ){
 
-       this.restaurantRepository = restaurantRepository; //inyeccion por constructor, mejor para testear
+       this.restaurantRepository = restaurantRepository;
        this.mapper = mapper;
        this.updateMapper = updateMapper;
 
 
+
        this.configProperties = configProperties;
    }
-    //con esto leo valores del application properties
-//    @Value("#{${name}.name}")
-//    public String name;
-//
-//    @Value("#{${name}.description}")
-//    public String description;
 
+    public List<FindAllRestaurantsByUserCoordinatesResponse> findAllResturantsByUserCoordinates(FindAllRestaurantsByUserCoordinatesRequest coordinates){
+        List<Restaurant> restaurants = (List<Restaurant>) restaurantRepository.findAll();
+        List<FindAllRestaurantsByUserCoordinatesResponse> response = new ArrayList<>(restaurants.stream().map((restaurant -> {
+            FindAllRestaurantsByUserCoordinatesResponse rest = new FindAllRestaurantsByUserCoordinatesResponse();
+            double distance = Utils
+                    .getDistanceInKilometers(Double.parseDouble(coordinates.getLongitude())
+                            , Double.parseDouble(coordinates.getLatitude())
+                            , Double.parseDouble(restaurant.getLongitude())
+                            , Double.parseDouble(restaurant.getLatitude()));
+            rest.setDistance(distance);
+            rest.setName(restaurant.getName());
+            rest.setDescription(rest.getDescription());
+            rest.setPhoto(restaurant.getPhoto());
+            return rest;
+        })).toList());
+        response.sort((a, b) -> (int) (a.getDistance() - b.getDistance()));
+        return response;
+    }
 
     public ResponseEntity<Map<String,Restaurant>> save(CreateRestaurantDTO restaurant){
         System.out.println(configProperties.getNames().get("name")); //llamando propiedades del archivo de configuracion
