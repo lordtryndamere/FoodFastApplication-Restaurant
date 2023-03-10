@@ -22,6 +22,7 @@ public class Restaurant {
     private String name;
     private String description;
 
+    @Column(columnDefinition = "https://cwdaust.com.au/wpress/wp-content/uploads/2015/04/placeholder-restaurant.png")
     private String photo;
 
     private String latitude;

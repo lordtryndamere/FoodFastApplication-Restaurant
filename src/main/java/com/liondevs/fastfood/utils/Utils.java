@@ -1,24 +1,38 @@
 package com.liondevs.fastfood.utils;
 
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.Map;
+import java.text.DecimalFormat;
 
-
-
+@Slf4j
 public class Utils {
 
-    public static double getDistanceInKilometers(double lon1, double lat1, double lon2, double lat2){
-        final int R = 6371; // Radius of the earth
-        double latDistance = Math.toRadians(lat2 - lat1);
-        double lonDistance = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
+    public static String getDistanceInKilometers(double lon1, double lat1, double lon2, double lat2, String unit){
+        log.info("---lon1: {}",lon1);
+        log.info("---lat1: {}",lat2);
+        log.info("---lon2: {}",lon2);
+        log.info("---lat1: {}",lat2);
+        if ((lat1 == lat2) && (lon1 == lon2)) {
+            return "0";
+        }
+        else {
+            double theta = lon1 - lon2;
+            double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+            dist = Math.acos(dist);
+            dist = Math.toDegrees(dist);
+            dist = dist * 60 * 1.1515;
+            if (unit.equals("K")) {
+                dist = dist * 1.609344;
+            } else if (unit.equals("N")) {
+                dist = dist * 0.8684;
+            }
+            DecimalFormat decimalFormat = new DecimalFormat("0.###");
+            return decimalFormat.format(dist);
+            //return  String.valueOf((dist));
+        }
     }
+
+
 
 }

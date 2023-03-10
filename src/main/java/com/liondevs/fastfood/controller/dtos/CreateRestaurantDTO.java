@@ -11,7 +11,6 @@ import java.util.Objects;
 @Scope(scopeName = "stereotype")
 public class CreateRestaurantDTO {
     @NotEmpty
-
     private String name;
     @NotEmpty
     private String description;

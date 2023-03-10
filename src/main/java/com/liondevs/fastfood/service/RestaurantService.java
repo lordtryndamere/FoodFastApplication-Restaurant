@@ -1,6 +1,6 @@
 package com.liondevs.fastfood.service;
 
-import com.liondevs.fastfood.context.ConfigProperties;
+
 import com.liondevs.fastfood.controller.dtos.CreateRestaurantDTO;
 import com.liondevs.fastfood.controller.dtos.UpdateRestaurantDTO;
 import com.liondevs.fastfood.controller.dtos.queries.FindAllRestaurantsByUserCoordinatesRequest;
@@ -14,10 +14,13 @@ import com.liondevs.fastfood.persistence.repository.RestaurantRepository;
 
 import com.liondevs.fastfood.utils.Utils;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.modelmapper.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
 
@@ -29,12 +32,10 @@ public class RestaurantService {
   private final UpdateRestaurantInDTOtoRestaurant updateMapper;
 
 
-  private final ConfigProperties configProperties;
 
    public  RestaurantService(RestaurantRepository restaurantRepository,
                              CreateRestaurantInDTOToRestaurant mapper,
-                             UpdateRestaurantInDTOtoRestaurant updateMapper,
-                             ConfigProperties configProperties
+                             UpdateRestaurantInDTOtoRestaurant updateMapper
                           ){
 
        this.restaurantRepository = restaurantRepository;
@@ -43,35 +44,36 @@ public class RestaurantService {
 
 
 
-       this.configProperties = configProperties;
+
    }
 
+
+   private String distance(String... coordinates){
+       List<String> listOfCoordinates = new ArrayList<>(Arrays.asList(coordinates));
+    return  Utils
+            .getDistanceInKilometers(
+                    Double.parseDouble(listOfCoordinates.get(0)),
+                    Double.parseDouble(listOfCoordinates.get(1)),
+                    Double.parseDouble(listOfCoordinates.get(2)),
+                    Double.parseDouble(listOfCoordinates.get(3)),
+                    "K"
+            );
+   }
     public List<FindAllRestaurantsByUserCoordinatesResponse> findAllRestaurantsByUserCoordinates(FindAllRestaurantsByUserCoordinatesRequest coordinates){
         List<Restaurant> restaurants = (List<Restaurant>) restaurantRepository.findAll();
         List<FindAllRestaurantsByUserCoordinatesResponse> response = new ArrayList<>(restaurants.stream().map((restaurant -> {
-            FindAllRestaurantsByUserCoordinatesResponse rest = new FindAllRestaurantsByUserCoordinatesResponse();
-            double distance = Utils
-                    .getDistanceInKilometers(
-                            Double.parseDouble(
-                            coordinates.getLongitude()),
-                            Double.parseDouble(coordinates.getLatitude()),
-                            Double.parseDouble(restaurant.getLongitude()),
-                            Double.parseDouble(restaurant.getLatitude())
-                    );
-            rest.setDistance(distance);
-            rest.setName(restaurant.getName());
-            rest.setDescription(rest.getDescription());
-            rest.setPhoto(restaurant.getPhoto());
-            return rest;
+            String distance =
+                    this.distance(coordinates.getLongitude(),coordinates.getLatitude(),restaurant.getLongitude(),restaurant.getLatitude());
+            Type objectType = new TypeToken<FindAllRestaurantsByUserCoordinatesResponse>() {}.getType();
+            FindAllRestaurantsByUserCoordinatesResponse  returnValue = new ModelMapper().map(restaurant, objectType);
+            returnValue.setDistance(distance);
+            return returnValue;
         })).toList());
-        response.sort((a, b) -> (int) (a.getDistance() - b.getDistance()));
+        response.sort((a, b) -> (int) ( Double.parseDouble(a.getDistance())  - Double.parseDouble(b.getDistance())));
         return response;
     }
 
     public ResponseEntity<Map<String,Restaurant>> save(CreateRestaurantDTO restaurant){
-        System.out.println(configProperties.getNames().get("name")); //llamando propiedades del archivo de configuracion
-        System.out.println(configProperties.getNames().get("description"));
-
     try {
         final Restaurant record =  mapper.map(restaurant);
         restaurantRepository.save(record);

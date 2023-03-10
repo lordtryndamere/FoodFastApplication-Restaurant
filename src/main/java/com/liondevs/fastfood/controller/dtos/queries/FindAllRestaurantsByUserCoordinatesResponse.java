@@ -13,5 +13,5 @@ public class FindAllRestaurantsByUserCoordinatesResponse {
 
     private String photo;
 
-    private double distance;
+    private String distance;
 }
